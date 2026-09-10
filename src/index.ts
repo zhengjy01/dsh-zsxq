@@ -99,6 +99,7 @@ export function zsxqStatusTool(ctx: ToolContext) {
           ok: { type: 'boolean', required: true },
           message: { type: 'string', required: true },
           configured: { type: 'boolean' },
+          hasAccessToken: { type: 'boolean' },
           accessTokenMasked: { type: 'string' },
           cookieUpdatedAt: { type: 'string' },
           cookieAgeDays: { type: 'number' },
@@ -305,7 +306,10 @@ export function zsxqTopicTool(ctx: ToolContext) {
     async execute(args: Record<string, unknown>) {
       try {
         const topicId = String(args?.topic_id ?? '')
-        if (topicId === '') return { ok: false, message: '缺少 topic_id 参数。', topic: undefined, comments: [] }
+        // DSH 0.1.5+ snapshots every tool result as lossless JSON: an explicit
+        // `undefined` property is rejected ("value is not lossless JSON"), so the
+        // optional `topic` key must be omitted instead of set to undefined.
+        if (topicId === '') return { ok: false, message: '缺少 topic_id 参数。', comments: [] }
         const withComments = args?.with_comments !== false
         const client = await clientOf(ctx.store)
         const { topic } = await client.getTopic(topicId)
@@ -323,7 +327,7 @@ export function zsxqTopicTool(ctx: ToolContext) {
         }
         return { ok: true, message: parts.join('\n'), topic: toJson(topic), comments }
       } catch (error) {
-        return { ok: false, message: '获取主题详情失败: ' + errorMessage(error), topic: undefined, comments: [] }
+        return { ok: false, message: '获取主题详情失败: ' + errorMessage(error), comments: [] }
       }
     },
   })

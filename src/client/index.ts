@@ -8,7 +8,8 @@
 // Type-only: pulls the settings-surface SlotMap merge (the 'settings.section'
 // entry) and the client runtime Context merge.
 import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
-import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
+import type { Context as ClientContext } from '@deepseek-ai/cordis'
+import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
 import { ZsxqPanel } from './ZsxqPanel.tsx'
 
 /** Required services. */
